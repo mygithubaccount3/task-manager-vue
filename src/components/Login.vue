@@ -2,10 +2,8 @@
   <div class="formWrapper">
   <h1>Login Page</h1>
   <form @submit.prevent='logIn' class='loginForm'>
-      <label>
-        email:
-        <input type='email' v-model="email" />
-      </label>
+      <label for="emailInput">email:</label>
+      <input type='email' v-model="email" id="emailInput"/>
       <p class="error" v-if="error.length">{{this.error}}</p>
       <button type='submit'>submit</button>
   </form>
@@ -42,16 +40,27 @@ export default {
   .formWrapper {
         border: 1px solid black;
         margin: auto;
+        min-width: 200px;
         padding: 10px;
-        width: 50%;
+        width: 25%;
     }
 
   .loginForm {
+    align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     margin: auto;
-    height: 100px;
+    height: 150px;
+
+    & label {
+      align-self: flex-start;
+      margin-bottom: 10px;
+    }
+
+    & input {
+      width: 100%;
+    }
 
     & > button {
       background-color: white;
@@ -64,6 +73,7 @@ export default {
   }
 
   .error {
+    align-self: flex-start;
     background-color: red;
     color: white;
     padding: 3px;

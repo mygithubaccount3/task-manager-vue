@@ -1,5 +1,5 @@
 <template>
-  <div :style="{position: 'relative'}">
+  <div :style="{minHeight: '150px', position: 'relative'}">
     <div class="overlay" @click="closeDrawer"></div>
     <button class="btn-toggle" name="addTask" @click="openDrawer">
       <font-awesome-icon icon="plus-circle" size="3x" />
@@ -21,11 +21,11 @@
         icon="times"
         size="2x"
         @click="closeDrawer"
-        :style="{color: 'black', position: 'absolute', bottom: '10px'}"
+        :style="{color: 'black', position: 'absolute', bottom: '0px', left: 'calc(50% - 11px)'}"
       />
     </div>
     <header>
-      &lt;{{this.email}}&gt;
+      <span>&lt;{{this.email}}&gt;</span>
       <router-link to="/login" @click.native="logout()" replace class="logoutButton">LogOut</router-link>
     </header>
     <ul>
@@ -87,6 +87,7 @@ export default {
         text
       })
       localStorage.setItem('card-items', JSON.stringify(this.cards))
+      e.target.reset()
     },
     removeCard (id) {
       const index = this.cards.findIndex(el => el.id === id)
@@ -206,12 +207,18 @@ header {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid black;
+  padding-top: 10px;
   padding-bottom: 10px;
+
+  & span {
+    margin-left: 10px;
+  }
 }
 
 .logoutButton {
-  border: 1px solid black;
+  border: 1px solid #000000;
   border-radius: 5px;
+  margin-right: 10px;
   padding: 5px 30px;
   text-decoration: none;
 }
@@ -219,15 +226,21 @@ header {
 ul {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   list-style-type: none;
+  margin: auto;
   padding: 0;
+  width: 90%;
 
   & > li {
     display: inline-block;
     margin: 10px;
     min-width: 200px;
     width: 25%;
+
+    @media screen and (max-width: 767px) {
+      width: 100%;
+    }
   }
 }
 </style>

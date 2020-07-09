@@ -42,6 +42,7 @@ export default {
 
     &__title, &__description {
         text-align: left;
+        word-break: break-all;
     }
 }
 </style>
