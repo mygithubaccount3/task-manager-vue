@@ -6,16 +6,17 @@
     </button>
     <!-- <Drawer /> -->
     <div class="drawer">
-      <form @submit.prevent="addCard">
+      <form @submit.prevent="submitForm">
         <label>
           Title:
-          <input type="text" name="titleInput" />
+          <input type="text" name="titleInput" v-model="titleInput" />
         </label>
         <label>
           Description:
-          <textarea rows="10" name="descriptionInput" />
+          <textarea rows="10" name="descriptionInput" v-model="descriptionInput"/>
         </label>
-        <input type="submit" value="submit" />
+        <input type="submit" value="submit" name="createCard" v-if="creating"/>
+        <input type="submit" value="submit" name="editCard" v-else/>
       </form>
       <font-awesome-icon
         icon="times"
@@ -30,7 +31,7 @@
     </header>
     <ul>
       <li v-for="card in cards" :key="card.id">
-        <Card :id="card.id" :title="card.title" :text="card.text" @removeCard='removeCard' @editCard='openDrawer' />
+        <Card :id="card.id" :title="card.title" :text="card.text" @removeCard='removeCard' @openEditingDrawer='openEditingDrawer' />
       </li>
     </ul>
   </div>
@@ -47,7 +48,11 @@ export default {
   data () {
     return {
       email: localStorage.getItem('email'),
-      cards: []
+      cards: [],
+      descriptionInput: '',
+      titleInput: '',
+      creating: true,
+      id: ''
     }
   },
   created: function () {
@@ -63,40 +68,52 @@ export default {
     }
   },
   methods: {
-    openDrawer (e) {
+    openDrawer () {
       const root = document.getElementById('app')
       root.classList.add('drawer-open')
-
-      if (e.target.name === 'editTask') {
-
-      }
+    },
+    openEditingDrawer (id, title, text) {
+      this.id = id
+      this.titleInput = title
+      this.descriptionInput = text
+      this.creating = false
+      this.openDrawer()
     },
     closeDrawer () {
       const root = document.getElementById('app')
       root.classList.remove('drawer-open')
+      this.id = ''
+      this.titleInput = ''
+      this.descriptionInput = ''
+      this.creating = true
     },
     logout () {
       this.$emit('logout')
     },
-    addCard (e) {
-      const title = e.target.titleInput.value
-      const text = e.target.descriptionInput.value
-      this.cards.push({
-        id: uuid.v4(),
-        title,
-        text
-      })
-      localStorage.setItem('card-items', JSON.stringify(this.cards))
-      e.target.reset()
+    submitForm (e) {
+      if (e.target.createCard) {
+        this.cards.push({
+          id: uuid.v4(),
+          title: this.titleInput,
+          text: this.descriptionInput
+        })
+        localStorage.setItem('card-items', JSON.stringify(this.cards))
+      } else {
+        const elIndex = this.cards.findIndex((el, i, arr) => el.id === this.id)
+        this.cards.splice(elIndex, 1, {
+          id: uuid.v4(),
+          title: this.titleInput,
+          text: this.descriptionInput
+        })
+        localStorage.setItem('card-items', JSON.stringify(this.cards))
+      }
+      this.closeDrawer()
     },
     removeCard (id) {
       const index = this.cards.findIndex(el => el.id === id)
       this.cards.splice(index, 1)
       localStorage.setItem('card-items', JSON.stringify(this.cards))
     }
-    /* editCard () {
-      this.openDrawer()
-    } */
   }
 }
 </script>

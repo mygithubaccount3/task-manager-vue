@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card__header">
-            <font-awesome-icon icon="pen" size="2x" name='editTask' :style="{marginRight: '10px'}"/>
+            <font-awesome-icon icon="pen" size="2x" @click="editCard" :style="{marginRight: '10px'}"/>
             <font-awesome-icon icon="trash" size="2x" @click="deleteCard"/>
         </div>
         <div class="card__content">
@@ -24,7 +24,7 @@ export default {
       }
     },
     editCard () {
-      this.$emit('editCard', this.id)
+      this.$emit('openEditingDrawer', this.id, this.title, this.text)
     }
   }
 }
