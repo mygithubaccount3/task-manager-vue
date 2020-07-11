@@ -59,11 +59,11 @@ export default {
     if (!this.email) {
       this.$router.replace('login')
     } else {
-      const remouteCards = JSON.parse(localStorage.getItem('card-items'))
+      const remoteCards = JSON.parse(localStorage.getItem('card-items'))
       this.cards.splice(0)
       const context = this
-      if (remouteCards) {
-        remouteCards.forEach(el => context.cards.push(el))
+      if (remoteCards) {
+        remoteCards.forEach(el => context.cards.push(el))
       }
     }
   },
