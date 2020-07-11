@@ -251,11 +251,16 @@ ul {
 
   & > li {
     display: inline-block;
-    margin: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     min-width: 200px;
-    width: 25%;
+    width: 30%;
 
     @media screen and (max-width: 767px) {
+      width: 46%;
+    }
+
+    @media screen and (max-width: 555px) {
       width: 100%;
     }
   }
