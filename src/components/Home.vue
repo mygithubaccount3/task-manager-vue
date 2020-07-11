@@ -15,8 +15,8 @@
           Description:
           <textarea rows="10" name="descriptionInput" v-model="descriptionInput"/>
         </label>
-        <input type="submit" value="submit" name="createCard" v-if="creating"/>
-        <input type="submit" value="submit" name="editCard" v-else/>
+        <input type="submit" value="submit" v-if="creating"/>
+        <input type="submit" value="submit" v-else/>
       </form>
       <font-awesome-icon
         icon="times"
@@ -91,7 +91,7 @@ export default {
       this.$emit('logout')
     },
     submitForm (e) {
-      if (e.target.createCard) {
+      if (this.creating) {
         this.cards.push({
           id: uuid.v4(),
           title: this.titleInput,
