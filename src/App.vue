@@ -1,26 +1,12 @@
 <template>
   <div id="app">
-    <router-view @authenticated='setAuthenticated' @logout='logout'/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  data () {
-    return {
-      authenticated: false
-    }
-  },
-  methods: {
-    setAuthenticated (status) {
-      this.authenticated = status
-    },
-    logout () {
-      localStorage.removeItem('email')
-      this.authenticated = false
-    }
-  }
+  name: 'App'
 }
 </script>
 
@@ -35,18 +21,5 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>
