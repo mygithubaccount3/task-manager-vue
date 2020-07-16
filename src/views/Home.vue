@@ -1,13 +1,11 @@
 <template>
-  <div class="contentWrapper" ref="contentWrapper">
+  <div class="contentWrapper">
     <AlertModal v-if="showAlertModal" @closeAlertModal="closeAlertModal">{{this.alert}}</AlertModal>
-    <div class="contentWrapper__overlay" id="overlay" @click="closeDrawer"></div>
-    <button class="contentWrapper__btnOpenDrawer" @click="openDrawer">
-      <font-awesome-icon icon="plus-circle" size="3x" />
-    </button>
     <Drawer
       @submitForm="submitForm"
+      @openDrawer="openDrawer"
       @closeDrawer="closeDrawer"
+      :showDrawer="showDrawer"
       :id="id"
       :title="titleInput"
       :text="descriptionInput"
@@ -39,7 +37,7 @@ export default {
       titleInput: '',
       creating: true,
       id: '',
-      isDrawerOpened: false,
+      showDrawer: false,
       showAlertModal: false,
       alert: ''
     }
@@ -53,7 +51,7 @@ export default {
         this.showAlertModal = true
       }
     } else {
-      this.alert = 'Your browser does not support localStorage. Program will not work'
+      this.alert = 'Your browser does not support localStorage. The app will not work'
       this.showAlertModal = true
     }
 
@@ -69,7 +67,7 @@ export default {
   },
   methods: {
     openDrawer () {
-      this.$refs.contentWrapper.classList.add('drawer-open')
+      this.showDrawer = true
     },
 
     openEditingDrawer ({ id, title, text }) {
@@ -81,7 +79,7 @@ export default {
     },
 
     closeDrawer () {
-      this.$refs.contentWrapper.classList.remove('drawer-open')
+      this.showDrawer = false
       this.id = ''
       this.titleInput = ''
       this.descriptionInput = ''
@@ -95,11 +93,11 @@ export default {
         const elIndex = this.cards.findIndex((el, i, arr) => el.id === card.id)
         this.cards.splice(elIndex, 1, card)
       }
-      this.saveCard('localStorage', this.cards)
+      this.saveCards('localStorage', this.cards)
       this.closeDrawer()
     },
 
-    saveCard (destination, cards) {
+    saveCards (destination, cards) {
       switch (destination) {
         case 'localStorage':
           if (localStorage) {
@@ -114,6 +112,9 @@ export default {
             this.showAlertModal = true
           }
           break
+        default:
+          this.alert = 'Error occured: cards are not saved'
+          this.showAlertModal = true
       }
     },
 
@@ -133,13 +134,16 @@ export default {
             this.showAlertModal = true
             return '[]'
           }
+        default:
+          this.alert = 'Error getting cards'
+          this.showAlertModal = true
       }
     },
 
     removeCard (id) {
       const index = this.cards.findIndex(el => el.id === id)
       this.cards.splice(index, 1)
-      this.saveCard('localStorage', this.cards)
+      this.saveCards('localStorage', this.cards)
     },
 
     closeAlertModal () {
@@ -150,61 +154,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$drawer-width: 200px;
-$content-blur: 2px;
-$content-opacity: 0.2;
-$speed: 0.1s;
-$default-spacing: 30px;
-
 .contentWrapper {
   min-height: 150px;
   position: relative;
-
-  &__overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: 500;
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  &__btnOpenDrawer {
-    transition: all $speed ease-in-out;
-    position: absolute;
-    right: 20px;
-    border: none;
-    display: block;
-    background: inherit;
-    bottom: 20px;
-    padding: 0;
-    margin: 0;
-    outline: none;
-  }
-}
-
-.drawer-open {
-  .drawer {
-    box-shadow: rgba(0, 0, 0, 0.3) 2px 0 4px;
-    left: 0;
-  }
-}
-
-.drawer-open .contentWrapper__overlay {
-  display: block;
-}
-
-.drawer-open .drawer .contentWrapper__btnOpenDrawer {
-  right: 20px;
-  background: #fff;
-  color: #000;
-  &:before {
-    content: "\f00d";
-  }
-  &:after {
-    content: "Close";
-  }
 }
 </style>
